@@ -1,0 +1,100 @@
+
+@keyframes fadeInUp {
+  from {
+    transform: translate3d(0, 80px, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+}
+ .animated {
+   animation-duration: 4s;
+   animation-fill-mode: both;
+   -webkit-animation-duration: 2s;
+   -webkit-animation-fill-mode: both
+ }
+
+.animatedFadeInUp {
+  opacity: 0;
+}
+
+ .fadeInUp {
+  opacity: 0;
+   animation-name: fadeInUp;
+   -webkit-animation-name: fadeInUp;
+   /* animation: zoom-in 2s ease infinite; */
+ }
+
+
+.zoom-in {
+  margin: 24px;
+  width: 50px;
+  height: 50px;
+  /* background: #f50057; */
+  animation: zoom-in 2s ease ;
+}
+
+@keyframes zoom-in {
+  /* 0% {
+    transform: scale(.5, .5);
+  }
+  25% {
+    transform: scale(.65, .65);
+  }
+  50% {
+    transform: scale(.75, .75);
+  }
+  75% {
+    transform: scale(.85, .85);
+  }
+  100% {
+    transform: scale(1, 1);
+  } */
+
+  from {
+    transform: scale(.5,.5);
+  }
+  to {
+    transform: scale(1,1);
+  }
+}
+
+div.horizontal-shake {
+  animation: horizontal-shaking 0.35s infinite;
+}
+
+@keyframes horizontal-shaking {
+ 0% { transform: translateX(0) }
+ 25% { transform: translateX(5px) }
+ 50% { transform: translateX(-5px) }
+ 75% { transform: translateX(5px) }
+ 100% { transform: translateX(0) }
+}
+
+@keyframes fadeInDown {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 80px, 0);
+    opacity: 0;
+  }
+}
+ .animated {
+   animation-duration: 4s;
+   animation-fill-mode: both;
+   -webkit-animation-duration: 2s;
+   -webkit-animation-fill-mode: both
+ }
+
+.animatedFadeInDown {
+  opacity: 1;
+}
+
+ .fadeInDown {
+  opacity: 1;
+   animation-name: fadeInDown;
+   -webkit-animation-name: fadeInDown;
+   /* animation: zoom-in 2s ease infinite; */
+ }

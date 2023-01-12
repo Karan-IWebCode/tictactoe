@@ -23,11 +23,20 @@ interface ValueType {
 
 }
 const IndexPage: React.FC<PageProps> = () => {
-  const [chance, setChance] = React.useState(false);
+  const [chance, setChance] = React.useState(true);
   let [Value, setValue] = React.useState<ValueType>({})
   const [reset, setReset] = React.useState("")
   const [resetImg, setresetImg] = React.useState(layer)
-  const [Firstvalue, setFirstValue] = React.useState("")
+  const [Firstvalue, setFirstValue] = React.useState("X")
+  const [checkarr, setCheckarr] = React.useState([
+    0, 1, 2, 3, 4, 5, 6, 7, 8
+  ])
+
+  
+
+  useEffect(() => {
+    console.info('logging checkarr', checkarr)
+  }, [checkarr])
 
   const FirstPlayer = () => {
     setFirstValue("X")
@@ -35,7 +44,7 @@ const IndexPage: React.FC<PageProps> = () => {
 
   const tog = () => {
     setChance((current) => !current);
-    console.log("Chance", chance);
+    // console.log("Chance", chance);
   };
 
   // useCallback(() => {
@@ -50,18 +59,108 @@ const IndexPage: React.FC<PageProps> = () => {
     setresetImg("")
   }
 
+  const cpuchoice = (pos: number, option: string) => {
+    console.log("user chose ", pos)
+
+    win()
+   
+
+    tog()
+
+    const lengthAfterUserSelection = checkarr.filter(item => item != pos).length
+
+    const currentOption = 'O'
+
+    var randomValue = Math.floor(Math.random() * lengthAfterUserSelection)
+
+    console.log("random value", randomValue)
+
+    const cpuPosition = checkarr.filter(item => item != pos)[randomValue]
+
+    console.log("cpuPOstiotn", cpuPosition)
+
+    setCheckarr(checkarr.filter(item => item != pos).filter(item => item != cpuPosition))
+
+    setValue(prev => {
+
+      if (Value[pos] === 'O' || Value[pos] === 'X' || Value[cpuPosition] === 'O' || Value[cpuPosition] === 'X') {
+        console.log("Value already exist")
+        return prev
+      }
+      return {
+        ...prev,
+        [pos]: option,
+        [cpuPosition]: currentOption
+      }
+    })
+
+    //win();
+
+
+  }
+
+  // const cpuchoice = (pos: number, option: string) => {
+
+  //   let len = checkarr.length;
+  //   // console.log("checkarr", checkarr)
+  //   // console.log("User turn effects arr")
+
+  //   var userarr = checkarr.splice(pos, 1);
+
+  //   console.log("LOGGIN CHECKARR", checkarr)
+  //   // console.log("userarr", userarr);
+  //   // console.log("arr", checkarr);
+  //   len = checkarr.length
+
+  //   win();
+
+  //   tog();
+  //   option = 'O'
+  //   // console.log("option", option);
+  //   // console.log("computer turns effects arr")
+  //   var x = Math.floor(Math.random() * len) + 1;
+  //   setCheckarr(checkarr.filter(item => item != pos).filter(item => item != x - 1))
+  //   const val = checkarr[x]
+  //   console.log("random value genereated", x)
+  //   console.log("new val", val)
+  //   // console.log("x", x);
+  //   // console.log("arr", checkarr);
+  //   // var newarr = checkarr.splice(x - 1, 1);
+  //   // console.log("newarr", newarr);
+  //   // console.log("arr", checkarr);
+  //   len = checkarr.length
+  //   setValue(prev => {
+
+  //     if (Value[val] === 'O' || Value[val] === 'X') {
+  //       console.log("Value already exist", Value);
+  //       console.log("error", x)
+  //       return prev
+  //     }
+
+  //     // console.log("Value Obj", Value);
+
+  //     return {
+  //       ...prev,
+  //       [val]: option
+  //     }
+  //   })
+
+
+
+  // }
+
   const ClearValue = () => {
-    
+
     setReset("animated animatedFadeInDown fadeInDown");
     console.log(Value)
     setTimeout(() => {
-      
-        setValue({}) 
-        setReset("") 
+
+      setValue({})
+      setReset("")
       console.log('delay added', Value);
-      
-      }, 1500);
-    
+
+    }, 1500);
+
 
     // setresetImg("") // problem as it just remove image
   }
@@ -70,35 +169,43 @@ const IndexPage: React.FC<PageProps> = () => {
     console.log("Hello")
     if (((Value[0] === 'X') && (Value[1] === 'X') && (Value[2] === 'X')) || ((Value[0] === 'O') && (Value[1] === 'O') && (Value[2] === 'O'))) {
       console.log(`Player ${Value[1]} wins 1 : ) `);
+      alert(`Player ${Value[1]} wins 1 : ) `)
       ClearValue();
     }
     if (((Value[3] === 'X') && (Value[4] === 'X') && (Value[5] === 'X')) || ((Value[3] === 'O') && (Value[4] === 'O') && (Value[5] === 'O'))) {
       console.log(`Player  ${Value[3]} wins 2 `);
+      alert(`Player ${Value[3]} wins 1 : ) `)
       ClearValue();
     }
     if (((Value[6] === 'X') && (Value[7] === 'X') && (Value[8] === 'X')) || ((Value[6] === 'O') && (Value[7] === 'O') && (Value[8] === 'O'))) {
       console.log(`Player  ${Value[6]} wins 3 `);
+      alert(`Player ${Value[6]} wins 1 : ) `)
       ClearValue();
 
     }
     if (((Value[0] === 'X') && (Value[3] === 'X') && (Value[6] === 'X')) || ((Value[0] === 'O') && (Value[3] === 'O') && (Value[6] === 'O'))) {
       console.log(`Player  ${Value[0]} wins 4 `);
+      alert(`Player ${Value[0]} wins 1 : ) `)
       ClearValue();
     }
     if (((Value[1] === 'X') && (Value[4] === 'X') && (Value[7] === 'X')) || ((Value[1] === 'O') && (Value[4] === 'O') && (Value[7] === 'O'))) {
       console.log(`Player  ${Value[1]} wins 5"`);
+      alert(`Player ${Value[1]} wins 1 : ) `)
       ClearValue();
     }
     if (((Value[2] === 'X') && (Value[5] === 'X') && (Value[8] === 'X')) || ((Value[2] === 'O') && (Value[5] === 'O') && (Value[8] === 'O'))) {
       console.log(`Player  ${Value[2]} wins 6 `);
+      alert(`Player ${Value[2]} wins 1 : ) `)
       ClearValue();
     }
     if (((Value[0] === 'X') && (Value[4] === 'X') && (Value[8] === 'X')) || ((Value[0] === 'O') && (Value[4] === 'O') && (Value[8] === 'O'))) {
       console.log(`Player  ${Value[0]} wins 7 `);
+      alert(`Player ${Value[0]} wins 1 : ) `)
       ClearValue();
     }
     if (((Value[2] === 'X') && (Value[4] === 'X') && (Value[6] === 'X')) || ((Value[2] === 'O') && (Value[4] === 'O') && (Value[6] === 'O'))) {
       console.log(`Player  ${Value[2]} wins 8`);
+      alert(`Player ${Value[2]} wins 1 : ) `)
       ClearValue();
     }
     else {
@@ -125,51 +232,122 @@ const IndexPage: React.FC<PageProps> = () => {
                   type="button"
                   key={pos}
                   value={pos}
-                  onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
-                  // {setValue(prevState => {
-                  //  const val = "X"
-                  //  return {...prevState, pos:val}
-                  //  })
-                  //  console.log("Value",value);
-                  // }
-                  {
-                    let click = e.target.value
-                    console.log(typeof pos)
-                    console.log(pos)
-                    let option: 'X' | 'O' = chance ? 'X' : 'O';
+                  onClick={() => cpuchoice(pos, Firstvalue)}
+                // onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
+                // // {setValue(prevState => {
+                // //  const val = "X"
+                // //  return {...prevState, pos:val}
+                // //  })
+                // //  console.log("Value",value);
+                // // }
+                // {
+                //   let click = e.target.value
+                //   console.log(typeof pos)
+                //   console.log(pos)
 
-                    setValue(prev => {
-                      win();
-                      if (Value[pos] === 'O' || Value[pos] === 'X') {
-                        console.log("Value already exist", Value);
-                        return prev
-                      }
+                //   let option: 'X' | 'O' = chance ? 'X' : 'O';
+                //   setValue(prev => {
+                //     win();
+                //     if (Value[pos] === 'O' || Value[pos] === 'X') {
+                //       console.log("Value already exist", Value);
+                //       return prev
+                //     }
 
-                      console.log("Value Obj", Value);
-                      tog();
-                      return {
-                        ...prev,
-                        [pos]: option
-                      }
-                    })
-                    // setValue((prev) => {
-                    //   let click = (e.target.value)
-                    //   console.log("click", click)
-                    //   let option = chance ? "X" : "O";
 
-                    //   if (Value[click] === "X" || Value[click] === "O") {
-                    //     console.log("Value already exist", Value);
+                //     tog();
+                //     console.log("CHECKING", pos)
+                //     return {
+                //       ...prev,
+                //       [pos]: option
+                //     }
+                //   })
+                //   console.log("Value Obj", Value);
+                //   cpuchoice(pos, option);
+                //   console.log("under function");
+                //   // { 
+                //   //   option ===  'O' 
 
-                    //     return { ...prev };
-                    //   }
-                    //   console.log("Value Obj", Value);
-                    //   tog();
+                //   //   ? 
+                //   //     (
+                //   //       console.log("computer choice"),
+                //   //       setValue(prev => {
+                //   //             win();
+                //   //             if (Value[pos] === 'O' || Value[pos] === 'X') {
+                //   //               console.log("Value already exist", Value);
+                //   //               return prev
+                //   //             }
 
-                    //   return { ...prev, [click]: option };
+                //   //             console.log("Value Obj", Value);
 
-                    // });
-                  }
-                  }
+                //   //             return {
+                //   //               ...prev,
+                //   //               [pos]: option
+                //   //             }
+                //   //           })
+
+                //   //     )        
+
+
+                //   //   :
+
+                //   //       console.log("player choice");
+                //   //         setValue(prev => {
+                //   //           win();
+                //   //           if (Value[pos] === 'O' || Value[pos] === 'X') {
+                //   //             console.log("Value already exist", Value);
+                //   //             return prev
+                //   //           }
+
+                //   //           console.log("Value Obj", Value);
+
+                //   //           return {
+                //   //             ...prev,
+                //   //             [pos]: option
+                //   //           }
+                //   //         })
+
+
+                //   //   }
+                //   // tog();
+
+                //   // old functionality for multiplayer
+                //   // VERY IMPORTANT 
+
+
+                //   // setValue(prev => {
+                //   //   win();
+                //   //   if (Value[pos] === 'O' || Value[pos] === 'X') {
+                //   //     console.log("Value already exist", Value);
+                //   //     return prev
+                //   //   }
+
+                //   //   console.log("Value Obj", Value);
+                //   //   tog();
+                //   //   return {
+                //   //     ...prev,
+                //   //     [pos]: option
+                //   //   }
+                //   // })
+
+
+                //   // setValue((prev) => {
+                //   //   let click = (e.target.value)
+                //   //   console.log("click", click)
+                //   //   let option = chance ? "X" : "O";
+
+                //   //   if (Value[click] === "X" || Value[click] === "O") {
+                //   //     console.log("Value already exist", Value);
+
+                //   //     return { ...prev };
+                //   //   }
+                //   //   console.log("Value Obj", Value);
+                //   //   tog();
+
+                //   //   return { ...prev, [click]: option };
+
+                //   // });
+                // }
+                // }
                 >
                   {Value[pos] === 'X' ?
                     <>

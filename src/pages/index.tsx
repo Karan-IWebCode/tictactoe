@@ -7,7 +7,13 @@ import layer from '../images/layer1.png'
 import cube from '../images/cube.png'
 import cube1 from '../images/cube1.jpg'
 import cube2 from '../images/cube2.png'
-
+import cube3 from '../images/cube3.png'
+import maze from '../images/maze.png'
+import maze2 from '../images/maze-2.png'
+import maze3 from '../images/maze-3.png'
+import maze4 from '../images/maze-4.png'
+import gametoover from '../Sound/gameover.mp3'
+import mariojump from '../Sound/mariojumping.mp3'
 
 import { Icon } from "../assets/svgs"
 
@@ -27,12 +33,14 @@ const IndexPage: React.FC<PageProps> = () => {
   let [Value, setValue] = React.useState<ValueType>({})
   const [reset, setReset] = React.useState("")
   const [resetImg, setresetImg] = React.useState(layer)
+  const [resetSize, setresetSize] = React.useState("")
+  const [shakediv,setshakediv] = React.useState("")
   const [Firstvalue, setFirstValue] = React.useState("X")
   const [checkarr, setCheckarr] = React.useState([
     0, 1, 2, 3, 4, 5, 6, 7, 8
   ])
 
-  
+
 
   useEffect(() => {
     console.info('logging checkarr', checkarr)
@@ -44,6 +52,7 @@ const IndexPage: React.FC<PageProps> = () => {
 
   const tog = () => {
     setChance((current) => !current);
+    
     // console.log("Chance", chance);
   };
 
@@ -56,16 +65,41 @@ const IndexPage: React.FC<PageProps> = () => {
 
   const toggle = () => {
     setReset("animated animatedFadeInDown fadeInDown");
+    
     setresetImg("")
   }
+
+
+  useEffect(() => {
+    if (Value)
+    setTimeout(()=>{
+      win();
+      resetGame();
+    }, 1500)
+     
+  }, [Value])
 
   const cpuchoice = (pos: number, option: string) => {
     console.log("user chose ", pos)
 
-    win()
-   
-
     tog()
+
+    setValue(prev => {
+
+      if (Value[pos] === 'O' || Value[pos] === 'X' || Value[cpuPosition] === 'O' || Value[cpuPosition] === 'X') {
+        console.log("Value already exist")
+        return prev
+      }
+      return {
+        ...prev,
+        [pos]: option,
+      }
+    })
+
+    // win();
+
+    let sound2: any = document.getElementById("mariojump")
+    sound2.play();
 
     const lengthAfterUserSelection = checkarr.filter(item => item != pos).length
 
@@ -151,12 +185,16 @@ const IndexPage: React.FC<PageProps> = () => {
 
   const ClearValue = () => {
 
+    setresetSize("zoom-out")
     setReset("animated animatedFadeInDown fadeInDown");
+    
     console.log(Value)
     setTimeout(() => {
 
       setValue({})
+      setCheckarr([0, 1, 2, 3, 4, 5, 6, 7, 8])
       setReset("")
+      setresetSize("zoom-in")
       console.log('delay added', Value);
 
     }, 1500);
@@ -165,17 +203,43 @@ const IndexPage: React.FC<PageProps> = () => {
     // setresetImg("") // problem as it just remove image
   }
 
+  const resetGame = () => {
+    if(!checkarr.length){
+      let sound : any = document.getElementById("gameover")
+      sound.play();
+      setshakediv("horizontal-shake");
+      setTimeout(() => {
+        console.log("shakediv called");
+        setshakediv("")
+      }, 1000)
+      console.log("Array become empty");
+      setresetSize("zoom-out")
+      
+      
+      
+      setReset("animated animatedFadeInDown fadeInDown ");
+      setTimeout(()=>{
+        setValue({})
+        setCheckarr([0, 1, 2, 3, 4, 5, 6, 7, 8]);
+        setReset("")
+      },1000)
+      
+    }
+  }
+
   const win = () => {
-    console.log("Hello")
+   
     if (((Value[0] === 'X') && (Value[1] === 'X') && (Value[2] === 'X')) || ((Value[0] === 'O') && (Value[1] === 'O') && (Value[2] === 'O'))) {
       console.log(`Player ${Value[1]} wins 1 : ) `);
       alert(`Player ${Value[1]} wins 1 : ) `)
       ClearValue();
+      
     }
     if (((Value[3] === 'X') && (Value[4] === 'X') && (Value[5] === 'X')) || ((Value[3] === 'O') && (Value[4] === 'O') && (Value[5] === 'O'))) {
       console.log(`Player  ${Value[3]} wins 2 `);
       alert(`Player ${Value[3]} wins 1 : ) `)
       ClearValue();
+
     }
     if (((Value[6] === 'X') && (Value[7] === 'X') && (Value[8] === 'X')) || ((Value[6] === 'O') && (Value[7] === 'O') && (Value[8] === 'O'))) {
       console.log(`Player  ${Value[6]} wins 3 `);
@@ -220,10 +284,18 @@ const IndexPage: React.FC<PageProps> = () => {
       <div className="d-flex justify-content-center align-items-center">
         Welcome to tic tac game !
         <div>Game Grid</div>
-        <Playzone
-        //  className=
-        //  "horizontal-shake"
+        <Playzone 
+          style={{backgroundImage:`url(${maze3})`, backgroundRepeat:"no-repeat", zIndex:"23",position:"relative"}}
+         className={`${shakediv}`}
+        // "horizontal-shake"
         >
+          <audio id="gameover" src={gametoover}>
+
+          </audio>
+          <audio id="mariojump" src={mariojump}>
+
+          </audio>
+          
           {[...Array(9)].map((item, pos) => {
             return (
               <>
@@ -352,7 +424,7 @@ const IndexPage: React.FC<PageProps> = () => {
                   {Value[pos] === 'X' ?
                     <>
                       <ImgDiv className={`animated animatedFadeInUp fadeInUp ${reset} `} >
-                        <img className="zoom-in" src={resetImg} alt="nt" style={{ width: "120px", height: "120px" }} />
+                        <img className={`zoom-in ${resetSize}`} src={resetImg} alt="nt" style={{ width: "120px", height: "120px" }} />
 
                       </ImgDiv>
                     </>
@@ -363,7 +435,7 @@ const IndexPage: React.FC<PageProps> = () => {
                     Value[pos] === 'O' ?
                       <>
                         <ImgDiv className={`animated animatedFadeInUp fadeInUp ${reset} `} >
-                          <img className="zoom-in" src={cube1} alt="" style={{ width: "200px", height: "200px" }} />
+                          <img className={`zoom-in ${resetSize}`} src={cube} alt="" style={{ width: "200px", height: "200px" }} />
 
                         </ImgDiv>
 
@@ -415,6 +487,7 @@ const IndexPage: React.FC<PageProps> = () => {
         <img src={cube1} alt="" />
 
       </ImgDiv>
+      
       {/* <Cent className="" style={{ border: "2px solid black" }}>
           {
             [...Array(9)].map((item,pos) => {
@@ -443,21 +516,43 @@ const ImgDiv = styled.div`
 `
 
 const Playzone = styled.div`
+  width:70vh;
+  height:70vh;
+  margin:10rem;
+  margin-left: auto;
+  margin-right: auto;
+  align-self:center;
+  justify-content: center;
   display:flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  border:1px solid red;
+  //border:1px solid red;
   padding: 1rem;
+  background-color: #c6a083;
+  background-size: contain;
+  //background-image: url({maze}) ;
+  box-shadow: 4px 20px 2px 0px rgb(130 88 63), 13px 13px 5px 8px rgb(152 97 64), 34px 34px 9px 26px rgb(183 146 119), 22px 22px 18px 33px rgb(200 155 126);
+  
+  //new value
+  transform: rotate3d(-0.9,1.2,1,60deg);
+  //transform: rotate(45deg);
+  
 `
 
 const PlayArea = styled.button`
   display:flex;
-  width:30vw;
-  height:20vh;
+  width:26%;
+  height:26%;
   align-items:center;
   justify-content: center;
-  border: 1px dotted black;
-  margin: 5px;
+  //border: 1px dotted black;
+  border: none;
+  margin: 20px;
+  margin-bottom: 1rem;
+ //background-color: #c7a287;
+  background-color: transparent;
+  border-radius: 3em;
+  z-index:1;
 `
 
 // @keyframes fadeInUp {
